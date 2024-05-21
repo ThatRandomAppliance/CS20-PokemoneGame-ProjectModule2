@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
+    <title>Pokemon Battle</title>
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="battle-row opponent">
+        <div class="info-block left">
+          <div class="name">NIDORINO</div>
+          <div class="hp-container">
+            <span>HP:</span><span id="opponent-hp"></span><span>/61</span>
+          </div>
+        </div>
+        <div>
+          <img
+            class="sprite"
+            id="nidorinoIdle"
+            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/33.png"
+          />
+        </div>
+      </div>
+      <div class="battle-row player">
+        <div class="info-block right">
+          <div class="name">GENGAR</div>
+          <div class="hp-container">
+            <span>HP:</span><span id="player-hp"></span><span>/60</span>
+          </div>
+        </div>
+        <div>
+          <img
+            class="sprite"
+            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/94.png"
+            id="gengarIdle"
+          />
+        </div>
+      </div>
+      <div class="bottom-box-border">
+        <div class="bottom-box">
+          <div id="message">What will <br />GENGAR do?</div>
+          <div id="divider"></div>
+          <div class="menu">
+            <button onclick="turns(this)">Tackle</button>
+            <div id="ppDisplayT">
+              <span>PP:</span><span id="ppT">13</span><span>/13</span>
+            </div>
+
+            <button id="button2" onclick="turns(this)">Shadow Claw</button>
+            <div id="ppDisplaySC">
+              <span>PP:</span><span id="ppSC">1</span><span>/1</span>
+            </div>
+
+            <button id="button3" onclick="turns(this)">Rock Smash</button>
+            <div id="ppDisplayRS">
+              <span>PP:</span><span id="ppRS">1</span><span>/1</span>
+            </div>
+
+            <button id="button4" onclick="turns(this)">Hidden Power</button>
+            <div id="ppDisplayHP">
+              <span>PP:</span><span id="ppHP">2</span><span>/2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
