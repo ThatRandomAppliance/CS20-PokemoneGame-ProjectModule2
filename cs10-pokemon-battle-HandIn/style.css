@@ -152,14 +152,14 @@ body {
   color: white;
   background-color: red;
 }
-#nidorinoIdle {
-  animation-name: idleNidorino;
+#opponentIdle {
+  animation-name: idleOpponent;
   animation-duration: 4s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   animation-direction: alternate-reverse;
 }
-@keyframes idleNidorino {
+@keyframes idleOpponent {
   0% {
     left: 0px;
   }
@@ -176,15 +176,15 @@ body {
     left: 0px;
   }
 }
-#gengarIdle {
-  animation-name: idleGengar;
+#playerIdle {
+  animation-name: idlePlayer;
   animation-duration: 4s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   animation-direction: alternate-reverse;
   animation-play-state: play;
 }
-@keyframes idleGengar {
+@keyframes idlePlayer {
   0% {
     right: 0px;
   }

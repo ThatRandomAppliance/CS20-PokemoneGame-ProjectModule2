@@ -9,8 +9,8 @@ let playerHpElement = document.getElementById("player-hp")
 playerHpElement.innerHTML = (gengarHP)
 let messageBox = document.getElementById("message")
 
-let pausePlayN = document.getElementById("nidorinoIdle")
-let pausePlayG = document.getElementById("gengarIdle")
+let pausePlayN = document.getElementById("opponentIdle")
+let pausePlayG = document.getElementById("playerIdle")
 
 let buttons = document.getElementsByTagName("button");
 let button1 = buttons[0].innerHTML
@@ -31,6 +31,64 @@ let tDMG = 5
 let scDMG = 45
 let rsdmg = 6
 let sHeal = 50
+
+let active = null
+let pokemon = null
+
+pokemonSelector()
+function pokemonSelector() {
+    for (let i = 0; i < 2; i++) {
+        if (i == 0) {
+            // console.log(i);
+            pokemon = "gengar"
+            // pokemonO = "O"
+            console.log(pokemon);
+            active = "P"
+            PokeData(pokemon, active)
+        }
+        if (i == 1) {
+            pokemon = "haxorus"
+            // pokemonP = "P"
+            console.log(pokemon);
+            active = "O"
+            PokeData(pokemon, active)
+        }
+        
+    }
+}
+
+async function PokeData(pokemon, active) {
+    if (active == "P") {
+        let pokemonP = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
+        console.log(pokemonP);
+        playerSprite(active,pokemonP)
+    }
+    if (active == "O") {
+        let pokemonO = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
+        console.log(pokemonO);
+        opponentSprite(active, pokemonO)
+        
+    }
+}
+
+async function playerSprite(active, pokemonP) {
+    console.log(active);
+        if (active == "P") {
+            let spriteP = pokemonP.sprites.back_default
+            let imgP = document.getElementById(playerIdle)
+            console.log(pokemonP.sprites.back_default);
+            imgP.src = spriteP
+        }
+    }
+    
+async function opponentSprite(active, pokemonO) {
+    if (active == "O") {
+        let spriteO = pokemonO.sprites.front_default
+        let imgO = document.getElementById(opponentIdle)
+        console.log(pokemonO.sprites.front_default);
+        imgO.src = spriteO
+    }
+}
 
 function tackleGengar() 
 {
@@ -314,7 +372,7 @@ function turns(choice)
 {
     if (playerTurn == true)
     {
-        pausePlayG.removeAttribute("id", "gengarIdle")
+        pausePlayG.removeAttribute("id", "playerIdle")
         pausePlayN.style.animationPlayState = "paused"
         if (choice.innerHTML != "Rock Smash")
         {
