@@ -108,25 +108,25 @@ button:active {
 body {
   background-color: rgb(247, 245, 245);
 }
-#ppDisplayT {
+#ppDisplayB1 {
   font-size: small;
   font-weight: bolder;
   position: absolute;
 }
-#ppDisplaySC {
+#ppDisplayB2 {
   font-size: small;
   font-weight: bolder;
   position: absolute;
   right: 105px;
 }
-#ppDisplayHP {
+#ppDisplayB3 {
   font-size: small;
   font-weight: bolder;
   position: absolute;
   right: 105px;
   top: 47px;
 }
-#ppDisplayRS {
+#ppDisplayB4 {
   font-size: small;
   font-weight: bolder;
   position: absolute;
