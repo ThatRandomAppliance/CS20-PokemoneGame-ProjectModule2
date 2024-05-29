@@ -34,6 +34,13 @@ let button4 = buttons[3].innerHTML
 
 let active = null
 let pokemon = null
+let moveNum = null
+let playerTotalHp = null
+let playerHp = null
+let opponentTotalHp = null
+let opponentHp = null
+let playerTotalPP1 = null
+let playerPP1 = null
 
 pokemonSelector()
 function pokemonSelector() {
@@ -45,7 +52,7 @@ function pokemonSelector() {
             PokeData(pokemon, active)
         }
         if (i == 1) {
-            pokemon = Math.floor(Math.random() * (300)) + 1
+            pokemon = Math.floor(Math.random() * (1025)) + 1
             console.log(pokemon);
             active = "O"
             PokeData(pokemon, active)
@@ -56,17 +63,23 @@ function pokemonSelector() {
 
 async function PokeData(pokemon, active) {
     if (active == "P") {
-        let pokemonP = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
-        console.log(pokemonP);
-        playerSprite(pokemonP)
-        pokemonNameP(pokemonP)
-        pokemonHpP(pokemonP)
+            let pokemonP = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
+            console.log(pokemonP);
+            playerSprite(pokemonP)
+            pokemonNameP(pokemonP)
+            pokemonHpP(pokemonP)
+            playerMoves(pokemonP)
     }
     if (active == "O") {
-        let pokemonO = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
-        console.log(pokemonO);
-        opponentSprite(pokemonO)
-        pokemonNameO(pokemonO)
+        try {
+            let pokemonO = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
+            console.log(pokemonO);
+            opponentSprite(pokemonO)
+            pokemonNameO(pokemonO)
+            pokemonHpO(pokemonO)
+        } catch (error) {
+            location.reload();
+        }
     }
 }
 
@@ -74,14 +87,18 @@ function pokemonNameP(pokemonP) {
     // if (active == "P") {
         let nameP = document.getElementById("playerName")
         nameP.innerHTML = pokemonP.name
+        let playerTurnPrompt = document.getElementById("WhatWillPlayerDo?")
+        playerTurnPrompt.innerHTML = pokemonP.name + " do?"
         // console.log(nameP);
     // }
 }
 
 function pokemonHpP(pokemonP) {
-    let playerTotalHp = document.getElementById(playerHpTotal)
+    playerTotalHp = document.getElementById("player-hp-total")
     console.log(playerTotalHp);
-    playerTotalHp = pokemonP.stats[0].base_stat
+    playerTotalHp.innerHTML = "/" + pokemonP.stats[0].base_stat
+    playerHp = document.getElementById("player-hp")
+    playerHp.innerHTML = pokemonP.stats[0].base_stat
 }
 
 function pokemonNameO(pokemonO) {
@@ -91,6 +108,15 @@ function pokemonNameO(pokemonO) {
         console.log(nameO);
     // }
 }
+
+function pokemonHpO(pokemonO) {
+    opponentTotalHp = document.getElementById("opponent-hp-total")
+    console.log(opponentTotalHp);
+    opponentTotalHp.innerHTML = "/" + pokemonO.stats[0].base_stat
+    opponentHp = document.getElementById("opponent-hp")
+    opponentHp.innerHTML = pokemonO.stats[0].base_stat
+}
+
 
 async function playerSprite(pokemonP) {
     console.log(active);
@@ -108,9 +134,33 @@ async function opponentSprite(pokemonO) {
         let imgO = document.getElementById("opponentIdle")
         console.log(pokemonO.sprites.front_default);
         imgO.src = spriteO
-    // }
-}
+        // }
+    }
 
+async function playerMoves(pokemonP) {
+    let pMove1 = document.getElementById("button" + 1)
+    moveNum = Math.floor(Math.random() * (77)) + 1
+    let moveStats = await(await (fetch("https://pokeapi.co/api/v2/move/" + moveNum))).json()
+    pMove1.innerHTML = pokemonP.moves[moveNum].move.name
+    playerTotalPP1 = document.getElementById("pp1Total")
+    playerTotalPP1.innerHTML = "/" + moveStats.pp
+    playerPP1 = document.getElementById("pp1")
+    playerPP1.innerHTML = moveStats.pp
+}
+    
+    // function turns(choice)
+    //     {
+    //         if (playerTurn == true)
+    //         {
+    //             pausePlayG.removeAttribute("id", "playerIdle")
+    //             pausePlayN.style.animationPlayState = "paused"
+    //             if (choice.innerHTML != "Rock Smash")
+    //             {
+    //                 playerTurn = false
+    //             }
+    //             actionsGengar(choice)
+    //         }
+    //     }
 // function tackleGengar() 
 // {
 //     console.log("Gt")
@@ -389,19 +439,6 @@ async function opponentSprite(pokemonO) {
 //     playerTurn = true
 // }
 
-// function turns(choice)
-// {
-//     if (playerTurn == true)
-//     {
-//         pausePlayG.removeAttribute("id", "playerIdle")
-//         pausePlayN.style.animationPlayState = "paused"
-//         if (choice.innerHTML != "Rock Smash")
-//         {
-//             playerTurn = false
-//         }
-//         actionsGengar(choice)
-//     }
-// }
 // function actionsGengar(choice) 
 // {
 //     console.log(choice.innerHTML)

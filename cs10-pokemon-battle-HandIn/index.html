@@ -14,7 +14,7 @@
         <div class="info-block left">
           <div class="name" id="opponentName"></div>
           <div class="hp-container">
-            <span>HP:</span><span id="opponent-hp"></span><span id="opponentHpTotal"></span>
+            <span>HP:</span><span id="opponent-hp"></span><span id="opponent-hp-total"></span>
           </div>
         </div>
         <div>
@@ -28,7 +28,7 @@
         <div class="info-block right">
           <div class="name" id="playerName"></div>
           <div class="hp-container">
-            <span>HP:</span><span id="player-hp"></span><span id="playerHpTotal"></span>
+            <span>HP:</span><span id="player-hp"></span><span id="player-hp-total"></span>
           </div>
         </div>
         <div>
@@ -40,12 +40,12 @@
       </div>
       <div class="bottom-box-border">
         <div class="bottom-box">
-          <div id="message">What will <br />GENGAR do?</div>
+          <div id="message">What will <br /><span id="WhatWillPlayerDo?"></span></div>
           <div id="divider"></div>
           <div class="menu">
-            <button onclick="turns(this)">Tackle</button>
+            <button id="button1" onclick="turns(this)"></button>
             <div id="ppDisplayB1">
-              <span>PP:</span><span id="ppT">13</span><span>/13</span>
+              <span>PP:</span><span id="pp1"></span><span id="pp1Total"></span>
             </div>
 
             <button id="button2" onclick="turns(this)">Shadow Claw</button>
