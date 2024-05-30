@@ -9,8 +9,8 @@ let playerHpElement = document.getElementById("player-hp")
 // playerHpElement.innerHTML = (gengarHP)
 let messageBox = document.getElementById("message")
 
-let pausePlayN = document.getElementById("opponentIdle")
-let pausePlayG = document.getElementById("playerIdle")
+let pausePlayO = document.getElementById("opponentIdle")
+let pausePlayP = document.getElementById("playerIdle")
 
 let buttons = document.getElementsByTagName("button");
 let button1 = buttons[0].innerHTML
@@ -47,13 +47,13 @@ function pokemonSelector() {
     for (let i = 0; i < 2; i++) {
         if (i == 0) {
             pokemon = 94
-            console.log(pokemon);
+            // console.log(pokemon);
             active = "P"
             PokeData(pokemon, active)
         }
         if (i == 1) {
             pokemon = Math.floor(Math.random() * (1025)) + 1
-            console.log(pokemon);
+            // console.log(pokemon);
             active = "O"
             PokeData(pokemon, active)
         }
@@ -64,7 +64,7 @@ function pokemonSelector() {
 async function PokeData(pokemon, active) {
     if (active == "P") {
             let pokemonP = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
-            console.log(pokemonP);
+            // console.log(pokemonP);
             playerSprite(pokemonP)
             pokemonNameP(pokemonP)
             pokemonHpP(pokemonP)
@@ -73,7 +73,7 @@ async function PokeData(pokemon, active) {
     if (active == "O") {
         try {
             let pokemonO = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
-            console.log(pokemonO);
+            // console.log(pokemonO);
             opponentSprite(pokemonO)
             pokemonNameO(pokemonO)
             pokemonHpO(pokemonO)
@@ -95,7 +95,7 @@ function pokemonNameP(pokemonP) {
 
 function pokemonHpP(pokemonP) {
     playerTotalHp = document.getElementById("player-hp-total")
-    console.log(playerTotalHp);
+    // console.log(playerTotalHp);
     playerTotalHp.innerHTML = "/" + pokemonP.stats[0].base_stat
     playerHp = document.getElementById("player-hp")
     playerHp.innerHTML = pokemonP.stats[0].base_stat
@@ -105,13 +105,13 @@ function pokemonNameO(pokemonO) {
     // if (active == "O") {
         let nameO = document.getElementById("opponentName")
         nameO.innerHTML = pokemonO.name
-        console.log(nameO);
+        // console.log(nameO);
     // }
 }
 
 function pokemonHpO(pokemonO) {
     opponentTotalHp = document.getElementById("opponent-hp-total")
-    console.log(opponentTotalHp);
+    // console.log(opponentTotalHp);
     opponentTotalHp.innerHTML = "/" + pokemonO.stats[0].base_stat
     opponentHp = document.getElementById("opponent-hp")
     opponentHp.innerHTML = pokemonO.stats[0].base_stat
@@ -119,11 +119,11 @@ function pokemonHpO(pokemonO) {
 
 
 async function playerSprite(pokemonP) {
-    console.log(active);
+    // console.log(active);
         // if (active == "P") {
             let spriteP = pokemonP.sprites.back_default
             let imgP = document.getElementById("playerIdle")
-            console.log(imgP);
+            // console.log(imgP);
             imgP.src = spriteP
         // }
     }
@@ -132,35 +132,49 @@ async function opponentSprite(pokemonO) {
     // if (active == "O") {
         let spriteO = pokemonO.sprites.front_default
         let imgO = document.getElementById("opponentIdle")
-        console.log(pokemonO.sprites.front_default);
+        // console.log(pokemonO.sprites.front_default);
         imgO.src = spriteO
         // }
     }
 
 async function playerMoves(pokemonP) {
-    let pMove1 = document.getElementById("button" + 1)
-    moveNum = Math.floor(Math.random() * (77)) + 1
-    let moveStats = await(await (fetch("https://pokeapi.co/api/v2/move/" + moveNum))).json()
-    pMove1.innerHTML = pokemonP.moves[moveNum].move.name
-    playerTotalPP1 = document.getElementById("pp1Total")
-    playerTotalPP1.innerHTML = "/" + moveStats.pp
-    playerPP1 = document.getElementById("pp1")
-    playerPP1.innerHTML = moveStats.pp
+    let playerMoves = []
+    let playerMovesPPT = []
+    let playerMovesPP = []
+    for (let i = 1; i < 5; i++) {
+        moveNum = Math.floor(Math.random() * (77)) + 1
+        let moveStats = await(await (fetch("https://pokeapi.co/api/v2/move/" + moveNum))).json()
+        playerMoves[i] = document.getElementById("button" + i)
+        // console.log(playerMoves);
+        playerMoves[i].innerHTML = pokemonP.moves[moveNum].move.name
+        playerMovesPPT[i] = document.getElementById("ppTotal" + i)
+        playerMovesPPT[i].innerHTML = "/" + moveStats.pp
+        playerMovesPP[i] = document.getElementById("pp" + i)
+        playerMovesPP[i].innerHTML = moveStats.pp
+        // console.log(playerMovesPPT);
+    }
 }
-    
-    // function turns(choice)
-    //     {
-    //         if (playerTurn == true)
-    //         {
-    //             pausePlayG.removeAttribute("id", "playerIdle")
-    //             pausePlayN.style.animationPlayState = "paused"
-    //             if (choice.innerHTML != "Rock Smash")
-    //             {
-    //                 playerTurn = false
-    //             }
-    //             actionsGengar(choice)
-    //         }
-    //     }
+
+function turns(choice)
+    {
+        console.log(choice.innerHTML);
+        if (playerTurn == true)
+        {
+            pausePlayP.removeAttribute("id", "playerIdle")
+            pausePlayO.style.animationPlayState = "paused"
+        //     if (choice.innerHTML != "Rock Smash")
+        //     {
+        //         playerTurn = false
+        //     }
+            actionsPlayer(choice)
+        }
+    }
+
+    async function actionsPlayer(choice) {
+        let choiceStats = await(await (fetch("https://pokeapi.co/api/v2/move/" + choice.innerHTML))).json()
+        console.log(choiceStats);
+    }
+
 // function tackleGengar() 
 // {
 //     console.log("Gt")
@@ -211,7 +225,7 @@ async function playerMoves(pokemonP) {
 //                 restartButton()
 //             }
 //             ,1400)
-//             pausePlayN.style.animationPlayState = "play"
+//             pausePlayO.style.animationPlayState = "play"
 //     }
 //     else
 //     {
@@ -228,7 +242,7 @@ async function playerMoves(pokemonP) {
 // {
 //     setTimeout(()=> 
 //             {
-//                 pausePlayG.setAttribute("id", "gengarFighting")
+//                 pausePlayP.setAttribute("id", "gengarFighting")
 //             }
 //             ,700)
 //     console.log("Grs")
@@ -303,7 +317,7 @@ async function playerMoves(pokemonP) {
 //         gengarHP = 0
 //         setTimeout(()=> 
 //             {
-//                 pausePlayG.style.animationPlayState = "paused"
+//                 pausePlayP.style.animationPlayState = "paused"
 //                 messageBox.innerHTML = ("Gengar has fainted")
 //             }
 //             ,1000)
@@ -334,7 +348,7 @@ async function playerMoves(pokemonP) {
 //         gengarHP = 0
 //         setTimeout(()=> 
 //             {
-//                 pausePlayG.style.animationPlayState = "paused"
+//                 pausePlayP.style.animationPlayState = "paused"
 //                 messageBox.innerHTML = ("Gengar has fainted")
 //             }
 //             ,1000)
@@ -366,7 +380,7 @@ async function playerMoves(pokemonP) {
 //         gengarHP = 0
 //         setTimeout(()=> 
 //             {
-//                 pausePlayG.style.animationPlayState = "paused"
+//                 pausePlayP.style.animationPlayState = "paused"
 //                 messageBox.innerHTML = ("Gengar has fainted")
 //             }
 //             ,700)
@@ -416,7 +430,7 @@ async function playerMoves(pokemonP) {
 //         gengarHP = 0
 //         setTimeout(()=> 
 //             {
-//                 pausePlayG.style.animationPlayState = "paused"
+//                 pausePlayP.style.animationPlayState = "paused"
 //                 messageBox.innerHTML = ("Gengar has fainted")
 //             }
 //             ,1000)
@@ -604,7 +618,7 @@ async function playerMoves(pokemonP) {
 // }
 // function nidorinoTurn()
 // {
-//     pausePlayG.setAttribute("id", "gengarFighting")
+//     pausePlayP.setAttribute("id", "gengarFighting")
 //     let choice = Math.floor(Math.random() * (5 - 1) + 1)
 //     console.log(choice)
 //     actionsNidorino(choice)
