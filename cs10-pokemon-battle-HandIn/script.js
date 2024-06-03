@@ -18,32 +18,16 @@ let button2 = buttons[1].innerHTML
 let button3 = buttons[2].innerHTML
 let button4 = buttons[3].innerHTML
 
-// let tNPP = 13
-// let scNPP = 1
-// let sNPP = 1
-// let hpNPP = 2
-// let tGPP = 13
-// let scGPP = 1
-// let rsGPP = 1
-// let hpGPP = 2
+// let opponentHp = document.getElementById("opponent-hp")
+// let opponentTotalHp = document.getElementById("opponent-hp-total")
+// let nameO = null
+// let nameP = null
 
-// let tDMG = 5
-// let scDMG = 45
-// let rsdmg = 6
-// let sHeal = 50
-
-let active = null
-let pokemon = null
-let moveNum = null
-let playerTotalHp = null
-let playerHp = null
-let opponentTotalHp = null
-let opponentHp = null
-let playerTotalPP1 = null
-let playerPP1 = null
 
 pokemonSelector()
 function pokemonSelector() {
+    let active = null
+    let pokemon = null
     for (let i = 0; i < 2; i++) {
         if (i == 0) {
             pokemon = 94
@@ -71,50 +55,45 @@ async function PokeData(pokemon, active) {
             playerMoves(pokemonP)
     }
     if (active == "O") {
-        try {
             let pokemonO = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
             // console.log(pokemonO);
             opponentSprite(pokemonO)
             pokemonNameO(pokemonO)
             pokemonHpO(pokemonO)
-        } catch (error) {
-            location.reload();
-        }
     }
 }
 
 function pokemonNameP(pokemonP) {
-    // if (active == "P") {
         let nameP = document.getElementById("playerName")
         nameP.innerHTML = pokemonP.name
         let playerTurnPrompt = document.getElementById("WhatWillPlayerDo?")
         playerTurnPrompt.innerHTML = pokemonP.name + " do?"
         // console.log(nameP);
-    // }
+        
 }
 
 function pokemonHpP(pokemonP) {
-    playerTotalHp = document.getElementById("player-hp-total")
+    // let playerTotalHp = null
+    // let playerHp = null
+    let playerTotalHp = document.getElementById("player-hp-total")
     // console.log(playerTotalHp);
     playerTotalHp.innerHTML = "/" + pokemonP.stats[0].base_stat
-    playerHp = document.getElementById("player-hp")
+    let playerHp = document.getElementById("player-hp")
     playerHp.innerHTML = pokemonP.stats[0].base_stat
 }
 
 function pokemonNameO(pokemonO) {
-    // if (active == "O") {
         let nameO = document.getElementById("opponentName")
         nameO.innerHTML = pokemonO.name
         // console.log(nameO);
-    // }
 }
 
 function pokemonHpO(pokemonO) {
-    opponentTotalHp = document.getElementById("opponent-hp-total")
-    // console.log(opponentTotalHp);
-    opponentTotalHp.innerHTML = "/" + pokemonO.stats[0].base_stat
-    opponentHp = document.getElementById("opponent-hp")
-    opponentHp.innerHTML = pokemonO.stats[0].base_stat
+        let opponentTotalHp = document.getElementById("opponent-hp-total")
+        opponentTotalHp.innerHTML = "/" + pokemonO.stats[0].base_stat
+        // console.log(opponentTotalHp);
+        let opponentHp = document.getElementById("opponent-hp")
+        opponentHp.innerHTML = pokemonO.stats[0].base_stat
 }
 
 
@@ -138,14 +117,15 @@ async function opponentSprite(pokemonO) {
     }
 
 async function playerMoves(pokemonP) {
+    // let moveNum = null
     let playerMoves = []
     let playerMovesPPT = []
     let playerMovesPP = []
     for (let i = 1; i < 5; i++) {
-        moveNum = Math.floor(Math.random() * (77)) + 1
+        let moveNum = Math.floor(Math.random() * (77)) + 1
         let moveStats = await(await (fetch("https://pokeapi.co/api/v2/move/" + moveNum))).json()
         playerMoves[i] = document.getElementById("button" + i)
-        // console.log(playerMoves);
+        console.log(playerMoves);
         playerMoves[i].innerHTML = pokemonP.moves[moveNum].move.name
         playerMovesPPT[i] = document.getElementById("ppTotal" + i)
         playerMovesPPT[i].innerHTML = "/" + moveStats.pp
@@ -168,45 +148,58 @@ function turns(choice)
         //     }
             actionsPlayer(choice)
         }
+        if (playerTurn == false) {
+            console.log("opponent Turn");
+        }
     }
 
     async function actionsPlayer(choice) {
         let choiceStats = await(await (fetch("https://pokeapi.co/api/v2/move/" + choice.innerHTML))).json()
         console.log(choiceStats);
+        playerAttack(choiceStats, choice)
+
     }
 
-// function tackleGengar() 
-// {
-//     console.log("Gt")
-//     nidorinoHP -= tDMG
-//     messageBox.innerHTML = "GENGAR used tackle"
-//     if (nidorinoHP <= 0) 
-//     {
-//         nidorinoHP = 0
-//         setTimeout(()=> 
-//             {
-//                 messageBox.innerHTML = ("Nidorino has fainted")
-//             }
-//             ,1000)
-//             setTimeout(()=> 
-//             {
-//                 restartButton()
-//             }
-//             ,1400)
-//     }
-//     else
-//     {
-//         setTimeout(()=> 
-//             {
-//                 nidorinoTurn()
-//             }
-//             ,1000)
+function playerAttack(choiceStats, choice) 
+{
+    let pokeNameO = document.getElementById("opponentName").innerHTML
+    let pokeNameP = document.getElementById("playerName").innerHTML
+    console.log("PA")
+    let damage = choiceStats.power * 0.25
+    console.log(damage)
+    let currentHpO = document.getElementById("opponent-hp")
+    let remainingHpO = currentHpO.innerHTML
+    remainingHpO -= damage
+    currentHpO.innerHTML = remainingHpO
+
+    messageBox.innerHTML = pokeNameP + " used " + choice.innerHTML
+    if (remainingHpO <= 0) 
+    {
+        currentHpO.innerHTML = 0
+        setTimeout(()=> 
+            {
+                messageBox.innerHTML = (pokeNameO + " has fainted")
+            }
+            ,1000)
+            setTimeout(()=> 
+            {
+                restartButton()
+            }
+            ,1400)
+    }
+    else
+    {
+        setTimeout(()=> 
+            {
+                playerTurn = false
+                turns()
+            }
+            ,1000)
             
-//     }
-//     opponentHpElement.innerHTML = (nidorinoHP)
-//     playerTurn = false
-//     console.log(playerTurn)
-// }
+    }
+    // opponentHpElement.innerHTML = (nidorinoHP)
+}
+
 // function shadowClawGengar() 
 // {
 //     console.log("Gsc")
