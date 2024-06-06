@@ -28,6 +28,11 @@ let opponentMovesPPT = []
 let opponentMovesPP = []
 let opponentMovesPower = []
 
+let playerMoves = []
+let playerMovesPPT = []
+let playerMovesPP = []
+let playerMovesPower = []
+
 
 pokemonSelector()
 function pokemonSelector() {
@@ -57,15 +62,15 @@ async function PokeData(pokemon, active) {
             playerSprite(pokemonP)
             pokemonNameP(pokemonP)
             pokemonHpP(pokemonP)
-            playerMoves(pokemonP)
+            playerMovePicker(pokemonP)
     }
     if (active == "O") {
             let pokemonO = await(await (fetch("https://pokeapi.co/api/v2/pokemon/" + pokemon))).json()
-            // console.log(pokemonO);
+            console.log(pokemonO);
             opponentSprite(pokemonO)
             pokemonNameO(pokemonO)
             pokemonHpO(pokemonO)
-            opponentAbilities(pokemonO)
+            opponentMovePicker(pokemonO)
     }
 }
 
@@ -122,21 +127,37 @@ async function opponentSprite(pokemonO) {
         // }
     }
 
-async function playerMoves(pokemonP) {
+async function playerMovePicker(pokemonP) {
     // let moveNum = null
-    let playerMoves = []
-    let playerMovesPPT = []
-    let playerMovesPP = []
+    // let playerMoves = []
+    // let playerMovesPPT = []
+    // let playerMovesPP = []
+    // let playerMovesPower = []
     for (let i = 1; i < 5; i++) {
-        let moveNumP = Math.floor(Math.random() * (77)) + 1
+        let moveNumP = Math.floor(Math.random() * (pokemonP.moves.length - 1))
+        if (moveNumP == 0) {
+            moveNumP ++
+        }
+        // let moveNumP = Math.random.nextInt(pokemonO.moves.length)
         let moveStatsP = await(await (fetch("https://pokeapi.co/api/v2/move/" + moveNumP))).json()
-        playerMoves[i] = document.getElementById("button" + i)
-        console.log(playerMoves);
-        playerMoves[i].innerHTML = pokemonP.moves[moveNumP].move.name
-        playerMovesPPT[i] = document.getElementById("ppTotal" + i)
-        playerMovesPPT[i].innerHTML = "/" + moveStatsP.pp
-        playerMovesPP[i] = document.getElementById("pp" + i)
-        playerMovesPP[i].innerHTML = moveStatsP.pp
+        if (moveStatsP.power != null) {
+            playerMovesPower[i] = moveStatsP.power
+            playerMoves[i] = document.getElementById("button" + i)
+            // console.log(playerMoves);
+            playerMoves[i].innerHTML = pokemonP.moves[moveNumP].move.name
+            playerMovesPPT[i] = document.getElementById("ppTotal" + i)
+            playerMovesPPT[i].innerHTML = "/" + moveStatsP.pp
+            playerMovesPP[i] = document.getElementById("pp" + i)
+            playerMovesPP[i].innerHTML = moveStatsP.pp
+            console.log(playerMovesPower);
+            // console.log(playerMovesPPT);
+            // console.log(playerMovesPP);
+          }
+        if (moveStatsP.power == null) {
+            console.log(i);
+            i--; continue;
+        }
+        //   playerAbilities(pokemonP)
         // console.log(playerMovesPPT);
     }
 }
@@ -146,13 +167,15 @@ function turns(choice, moveUsed)
         console.log(choice.innerHTML);
         if (playerTurn == true)
         {
-            pausePlayP.removeAttribute("id", "playerIdle")
-            pausePlayO.style.animationPlayState = "paused"
-        //     if (choice.innerHTML != "Rock Smash")
-        //     {
-        //         playerTurn = false
-        //     }
-            actionsPlayer(choice, moveUsed)
+            if (opponentMovesPP[moveUsed] != 0) {
+                pausePlayP.removeAttribute("id", "playerIdle")
+                pausePlayO.style.animationPlayState = "paused"
+            //     if (choice.innerHTML != "Rock Smash")
+            //     {
+            //         playerTurn = false
+            //     }
+                actionsPlayer(choice, moveUsed)
+            }
         }
         if (playerTurn == false) {
             console.log("opponent Turn");
@@ -177,7 +200,7 @@ function playerAttack(choiceStats, choice, moveUsed)
     let pokeNameO = document.getElementById("opponentName").innerHTML
     let pokeNameP = document.getElementById("playerName").innerHTML
 
-    let damage = Math.floor(choiceStats.power * 0.25)
+    let damage = Math.floor(choiceStats.power * 0.5)
     console.log(damage)
     let currentHpO = document.getElementById("opponent-hp")
     let remainingHpO = currentHpO.innerHTML
@@ -212,24 +235,31 @@ function playerAttack(choiceStats, choice, moveUsed)
     // opponentHpElement.innerHTML = (nidorinoHP)
 }
 
-async function opponentAbilities(pokemonO) {
+async function opponentMovePicker(pokemonO) {
     // let opponentMoves = []
     // let opponentMovesPPT = []
     // let opponentMovesPP = []
     for (let i = 1; i < 5; i++) {
-        let moveNumO = Math.floor(Math.random() * (76)) + 1
+        let moveNumO = Math.floor(Math.random() * (pokemonO.moves.length - 1))
+        if (moveNumO == 0) {
+            moveNumO ++
+        }
         let moveStatsO = await(await (fetch("https://pokeapi.co/api/v2/move/" + moveNumO))).json()
-        opponentMovesPower[i] = moveStatsO.power
-        console.log(opponentMovesPower);
-        console.log(moveNumO);
+        if (Number.isFinite(moveStatsO.power) && moveStatsO.power != null && moveStatsO.power != 0) {
         opponentMoves[i] = pokemonO.moves[moveNumO].move.name
+        opponentMovesPower[i] = moveStatsO.power
         opponentMovesPPT[i] = "/" + moveStatsO.pp
         opponentMovesPP[i] = moveStatsO.pp
-        console.log(opponentMoves);
-        console.log(opponentMovesPPT);
-        console.log(opponentMovesPP);
+        console.log(opponentMovesPower);
+        // console.log(opponentMovesPPT);
+        // console.log(opponentMovesPP);
+        }
+        else {
+            //   playerAbilities(pokemonP)
+                console.log(i);
+                i--; continue;
+            }
     }
-
 }
 // opponentChoice()
 function opponentChoice() {
@@ -249,13 +279,13 @@ function opponentAttack(moveChoiceO)
 {
     // console.log(moveUsed);
     let OmoveUsedPP = opponentMovesPP[moveChoiceO]
-    OmoveUsedPP -= 1
+    OmoveUsedPP --
     console.log(OmoveUsedPP);
 
     let pokeNameO = document.getElementById("opponentName").innerHTML
     let pokeNameP = document.getElementById("playerName").innerHTML
 
-    let damage = Math.floor(opponentMovesPower[moveChoiceO] * 0.25)
+    let damage = Math.floor(opponentMovesPower[moveChoiceO] * 0.5)
     console.log(damage)
     let currentHpP = document.getElementById("player-hp")
     let remainingHpP = currentHpP.innerHTML
