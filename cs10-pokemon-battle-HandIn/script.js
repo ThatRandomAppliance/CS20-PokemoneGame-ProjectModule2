@@ -29,10 +29,10 @@ let opponentMovesPP = []
 let opponentMovesPower = []
 
 let playerMoves = []
+let playerMoveNames = []
 let playerMovesPPT = []
 let playerMovesPP = []
 let playerMovesPower = []
-
 
 pokemonSelector()
 function pokemonSelector() {
@@ -40,7 +40,7 @@ function pokemonSelector() {
     let pokemon = null
     for (let i = 0; i < 2; i++) {
         if (i == 0) {
-            pokemon = 94
+            pokemon = 206
             // console.log(pokemon);
             active = "P"
             PokeData(pokemon, active)
@@ -127,26 +127,20 @@ async function opponentSprite(pokemonO) {
         // }
     }
 
-async function playerMovePicker(pokemonP, pokemon) {
-    // let moveNum = null
-    // let playerMoves = []
-    // let playerMovesPPT = []
-    // let playerMovesPP = []
-    // let playerMovesPower = []
+async function playerMovePicker(pokemonP) {
     for (let i = 1; i < 5; i++) {
         let moveNumP = Math.floor(Math.random() * (pokemonP.moves.length - 1))
         if (moveNumP == 0) {
             moveNumP ++
         }
         let pokeMove = pokemonP.moves[moveNumP].move.name
-        let moveStatsP = await(await (fetch("https://pokeapi.co/api/v2/pokemon/move/" + pokeMove))).json()
+        let moveStatsP = await(await (fetch("https://pokeapi.co/api/v2/move/" + pokeMove))).json()
         console.log(moveStatsP.power);
         console.log(moveNumP);
         console.log(moveStatsP.name);
         if (moveStatsP.power == null) {
-            console.log(moveStatsP.power);
+            console.log(moveStatsP);
             moveNumP = Math.floor(Math.random() * (pokemonP.moves.length - 1))
-            moveStatsP = await(await (fetch("https://pokeapi.co/api/v2/pokemon/move/" + pokeMove))).json()
             console.log(moveNumP);
             console.log(moveStatsP.power);
             console.log(moveStatsP.name);
@@ -154,29 +148,44 @@ async function playerMovePicker(pokemonP, pokemon) {
             continue;
         }
         if (moveStatsP.power != null) {
-            playerMovesPower[i] = moveStatsP.power
             playerMoves[i] = document.getElementById("button" + i)
             playerMoves[i].innerHTML = pokeMove
+            let duplicateMoves = playerMoveNames.indexOf(pokeMove)
+            console.log(playerMoves);
+            if (duplicateMoves > -1) {
+                console.log(duplicateMoves);
+                i--; 
+                continue;
+            }
+            playerMovesPower[i] = moveStatsP.power
+            playerMoveNames = pokeMove
             playerMovesPPT[i] = document.getElementById("ppTotal" + i)
             playerMovesPPT[i].innerHTML = "/" + moveStatsP.pp
             playerMovesPP[i] = document.getElementById("pp" + i)
             playerMovesPP[i].innerHTML = moveStatsP.pp
-            // console.log(playerMoves);
-            // console.log(pokemonP.moves[moveNumP].move);
-            // console.log(playerMovesPower);
-            // console.log(playerMovesPP);
+            // playerMovesPP[i].innerHTML = 1
           }
-        //   playerAbilities(pokemonP)
-        // console.log(playerMovesPPT);
     }
 }
 
 function turns(choice, moveUsed)
     {
         console.log(choice.innerHTML);
+        console.log(playerMovesPP[moveUsed]);
         if (playerTurn == true)
         {
-            if (opponentMovesPP[moveUsed] != 0) {
+            if (playerMovesPP[moveUsed].innerHTML == 0) {
+                setTimeout(()=> 
+                {
+                messageBox.innerHTML = "what will " + document.getElementById("playerName").innerHTML + " do?"
+                // turns(playerTurn)
+            }
+            ,1000)
+            
+            playerTurn = true
+            messageBox.innerHTML = choice.innerHTML + " is out of PP"
+        }
+            if (playerMovesPP[moveUsed].innerHTML != 0) {
                 pausePlayP.removeAttribute("id", "playerIdle")
                 pausePlayO.style.animationPlayState = "paused"
             //     if (choice.innerHTML != "Rock Smash")
